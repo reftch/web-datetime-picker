@@ -153,14 +153,15 @@ export class DateTimePicker extends HTMLElement {
       }
       .element {
         width: 100%;
-        height: 30px;
+        height: 33px;
         display: grid;
         margin: 0;
         grid-template-columns: fit-content(50%) fit-content(50%) 35px;
         grid-gap: 5px;
-        border: 1px solid black;
+        //border: 1px solid black;
         border-radius: 3px;
         margin-bottom: 3px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.2);
       }
       .date-toggle {
         width: 185px;
@@ -168,7 +169,7 @@ export class DateTimePicker extends HTMLElement {
       }
       .datetime-icon {
         position: relative;
-        margin: 3px;
+        margin: 5px;
         background: url('/assets/datetime.png');
         background-size: 26px;
         background-repeat: no-repeat;
@@ -178,9 +179,10 @@ export class DateTimePicker extends HTMLElement {
       }
       input[type="text"] {
         position: relative;
-        top: 8px;
+        top: 10px;
         width: 90%;
         height: 18px;
+        color: #888;
         padding-left: 5px;
         outline: none;
         border: none;
