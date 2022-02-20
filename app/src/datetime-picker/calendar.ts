@@ -2,10 +2,11 @@ import { Day } from "./day";
 import { Month } from "./month";
 
 export class Calendar {
+
   weekDays = Array.from<string>({length: 7});
-  today: any;
-  year: any;
-  month: any;
+  today: Day;
+  year: number;
+  month: Month;
   lang: string;
   
   constructor(year: number, monthNumber: number, lang = 'default') {

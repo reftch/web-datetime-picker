@@ -18,7 +18,7 @@ export class Month {
     this.year = day.year;
     this.numberOfDays = monthsSize[this.number - 1];
     
-    if(this.number === 2) {
+    if (this.number === 2) {
       this.numberOfDays += isLeapYear(day.year) ? 1 : 0;
     }
     

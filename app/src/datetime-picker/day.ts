@@ -2,6 +2,7 @@
 import { getWeekNumber } from "./utils";
 
 export class Day extends Date {
+
   Date: Date;
   date: number;
   day: string;
@@ -60,4 +61,5 @@ export class Day extends Date {
       .replace(/\bMM\b/, this.monthNumber.toString().padStart(2, '0'))
       .replace(/\bM\b/, String(this.monthNumber));
   }
+  
 }

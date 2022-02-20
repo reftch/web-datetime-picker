@@ -10,17 +10,20 @@ export class DateTimePicker extends HTMLElement {
   format = 'DD/MM/YYYY';
   private shadow: ShadowRoot;
   private dateBtn: HTMLElement | null = null;
+  private prevBtn: HTMLElement | null = null;
+  private nextBtn: HTMLElement | null = null;
   
   calendar: Calendar;
-  date: Day | null = null;
+  day: Day | null = null;
+  selectedDayElement: HTMLElement | null = null;
 
   constructor() {
     super();
 
     const lang = window.navigator.language;
-    const date = new Date(this.date ?? (this.getAttribute("date") || Date.now()));
-    this.date = new Day(date, lang);
-    this.calendar = new Calendar(this.date.year, this.date.monthNumber, lang);
+    const date = new Date(this.day ?? (this.getAttribute("date") || Date.now()));
+    this.day = new Day(date, lang);
+    this.calendar = new Calendar(this.day.year, this.day.monthNumber, lang);
 
     this.shadow = this.attachShadow({ mode: "open" });
     this.render();
@@ -31,11 +34,25 @@ export class DateTimePicker extends HTMLElement {
     if (this.dateBtn) {
       this.dateBtn.addEventListener('click', this.triggerPicker);
     }
+    this.prevBtn = this.shadow.querySelector(".left");
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener('click', this.prevMonth);
+    }
+    this.nextBtn = this.shadow.querySelector(".right");
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener('click', this.nextMonth);
+    }
   }
 
   disconnectedCallback() {
     if (this.dateBtn) {
       this.dateBtn.removeEventListener('click', this.triggerPicker);
+    }
+    if (this.prevBtn) {
+      this.prevBtn.removeEventListener('click', this.prevMonth);
+    }
+    if (this.nextBtn) {
+      this.nextBtn.removeEventListener('click', this.nextMonth);
     }
   }  
 
@@ -48,6 +65,7 @@ export class DateTimePicker extends HTMLElement {
           (startDate as HTMLInputElement).placeholder = newValue;
           (endDate as HTMLInputElement).placeholder = newValue;
         }
+        break;
       }
 
       case 'start-date': {
@@ -55,6 +73,7 @@ export class DateTimePicker extends HTMLElement {
         if (el && newValue) {
           (el as HTMLInputElement).value = newValue;
         }
+        break;
       }
 
       case 'end_date': {
@@ -68,25 +87,46 @@ export class DateTimePicker extends HTMLElement {
 
   get weekDays() {
     return this.calendar.weekDays
-      .map((weekDay: string) => `<span>${weekDay.substring(0, 3)}</span>`)
-      .join('');
+      .map((weekDay: string) => `<span>${weekDay.substring(0, 3)}</span>`).join('');
   }
 
   selectDay(el: HTMLElement, day: any) {
-    if(day.isEqualTo(this.date)) return;
+    if (day.isEqualTo(this.day)) return;
     
-    this.date = day;
+    this.day = day;
     
-    if(day.monthNumber !== this.calendar.month.number) {
-      //this.prevMonth();
+    if (day.monthNumber !== this.calendar.month.number) {
+      this.prevMonth();
     } else {
       el.classList.add('selected');
-      // this.selectedDayElement.classList.remove('selected');
-      // this.selectedDayElement = el;
+      if (this.selectedDayElement) {
+        this.selectedDayElement.classList.remove('selected');
+      }
+      this.selectedDayElement = el;
     }
     
     // this.toggleCalendar();
     // this.updateToggleText();
+  }
+
+  prevMonth = () => {
+    this.calendar.goToPreviousMonth();
+    this.renderCalendarDays();
+  }
+
+  nextMonth = () => {
+    this.calendar.goToNextMonth();
+    this.renderCalendarDays();
+  }
+
+  updateHeaderText() {
+    // this.calendarDateElement.textContent = 
+      // `${this.calendar.month.name}, ${this.calendar.year}`;
+    const monthYear = `${this.calendar.month.name}, ${this.calendar.year}`;
+    const header = this.shadow.querySelector('.month-text');
+    if (header) {
+      (header as HTMLElement).innerText = monthYear;
+    }
   }
 
   getMonthDaysGrid() {
@@ -96,16 +136,22 @@ export class DateTimePicker extends HTMLElement {
     const totalDays = this.calendar.month.numberOfDays + totalLastMonthFinalDays;
     const monthList = Array.from({length: totalDays});
     
-    for(let i = totalLastMonthFinalDays; i < totalDays; i++) {
+    for (let i = totalLastMonthFinalDays; i < totalDays; i++) {
       monthList[i] = this.calendar.month.getDay(i + 1 - totalLastMonthFinalDays)
     }
     
-    for(let i = 0; i < totalLastMonthFinalDays; i++) {
+    for (let i = 0; i < totalLastMonthFinalDays; i++) {
       const inverted = totalLastMonthFinalDays - (i + 1);
       monthList[i] = prevMonth.getDay(prevMonth.numberOfDays - inverted);
     }
     
     return monthList;
+  }
+
+  isSelectedDate(day: Day) {
+    return this.day && day.date === this.day.date &&
+      day.monthNumber === this.day.monthNumber &&
+      day.year === this.day.year;
   }
 
   updateMonthDays() {
@@ -120,19 +166,24 @@ export class DateTimePicker extends HTMLElement {
         el.addEventListener('click', (e) => this.selectDay(el, day));
         el.setAttribute('aria-label', day.format(this.format));
           
-        if(day.monthNumber === this.calendar.month.number) {
+        if (day.monthNumber === this.calendar.month.number) {
           el.classList.add('current');
         }
 
-        // if(this.isSelectedDate(day)) {
-        //   el.classList.add('selected');
-        //   this.selectedDayElement = el;
-        // }
-
+        if (this.isSelectedDate(day)) {
+          el.classList.add('selected');
+          this.selectedDayElement = el;
+        }
         
         elDays.appendChild(el);
       })
     }
+  }
+
+  renderCalendarDays() {
+    this.updateHeaderText();
+    this.updateMonthDays();
+    //this.calendarDateElement.focus();
   }
 
   triggerPicker = () => {
@@ -142,7 +193,7 @@ export class DateTimePicker extends HTMLElement {
         el.classList.remove('visible');
       } else {
         el.classList.add('visible');
-        this.updateMonthDays();
+        this.renderCalendarDays();
       }
     }
   }
@@ -160,7 +211,7 @@ export class DateTimePicker extends HTMLElement {
         grid-gap: 5px;
         //border: 1px solid black;
         border-radius: 3px;
-        margin-bottom: 3px;
+        margin-bottom: 5px;
         box-shadow: 0 0 8px rgba(0,0,0,0.2);
       }
       .date-toggle {
@@ -194,7 +245,6 @@ export class DateTimePicker extends HTMLElement {
         border-radius: 5px;
         width: 300px;
         height: 270px;
-        cursor: pointer;
         background-color: #fff;
         padding: 10px;
         box-shadow: 0 0 8px rgba(0,0,0,0.2);
@@ -229,13 +279,19 @@ export class DateTimePicker extends HTMLElement {
         border-right: 8px solid transparent;
       }
       .left {
+        cursor: pointer;
         left: 16px;
         transform: rotate(-90deg);
         -webkit-transform: rotate(-90deg);
       }
       .right {
+        cursor: pointer;
         transform: rotate(90deg);
         -webkit-transform: rotate(90deg);
+      }
+      .left:hover, 
+      .right:hover {
+        border-bottom-color: #0399f7;
       }
       .week-days {
         display: grid;
@@ -294,7 +350,7 @@ export class DateTimePicker extends HTMLElement {
       <div class="select-area">
         <div class="month">
           <div class="arrow left"></div>
-          <div class="month-text">February, 2022</div>
+          <div class="month-text"></div>
           <div class="arrow right"></div>
         </div>
         <div class="week-days">${this.weekDays}</div>
