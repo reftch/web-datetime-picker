@@ -1,0 +1,10 @@
+{
+  "name": "web-datetime-picker",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "install": "npm install --prefix app",
+    "dev": "npm run dev --prefix app",
+    "build": "npm run build --prefix app"
+  }
+}
