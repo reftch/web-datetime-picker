@@ -2,6 +2,7 @@
 #app {
   position: absolute;
   top: 10%;
-  left: 50%;
+  left: calc(50% - 100px);
   width: 200px;
+  align-items: center;
 }
