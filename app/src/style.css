@@ -6,3 +6,11 @@
   width: 200px;
   align-items: center;
 }
+
+:root {
+  --dp-hover: #0399f7;
+  --dp-color: #063360;
+  --dp-background: #fdfdfd;
+  --dp-month-day: #c7c9d3;
+  --dp-selected: #0399a7;
+}

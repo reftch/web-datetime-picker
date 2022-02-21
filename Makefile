@@ -5,7 +5,7 @@ TAG?=16-alpine
 PROD_NAME=web-datetime-picker
 VERSION=0.1.0
 APP_NAME=dev-${PROD_NAME}-${VERSION}
-DOCKER?=podman
+DOCKER?=docker
 PROXY?=http://cp2123:8080
 PORT?=3000
 

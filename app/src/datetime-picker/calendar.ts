@@ -3,7 +3,7 @@ import { Month } from "./month";
 
 export class Calendar {
 
-  weekDays = Array.from<string>({length: 7});
+  weekDays = Array.from<string>({ length: 7 });
   today: Day;
   year: number;
   month: Month;
@@ -15,27 +15,14 @@ export class Calendar {
     this.month = new Month(new Date(this.year, (monthNumber || this.today.monthNumber) - 1), lang);
     this.lang = lang;
     
-    // this[Symbol.iterator] = function* () {
-    //   let number = 1;
-    //   yield this.getMonth(number);
-    //   while(number < 12) {
-    //     ++number;
-    //     yield this.getMonth(number);
-    //   }
-    // }
-    
     this.weekDays.forEach((_, i: number) => {
       const day = this.month.getDay(i + 1);
-      if(!this.weekDays.includes(day.day)) {
-        this.weekDays[day.dayNumber - 1] = day.day
+      if (!this.weekDays.includes(day.day)) {
+        this.weekDays[day.dayNumber - 1] = day.day;
       }
     })
   }
-  
-  // get isLeapYear() {
-  //   return isLeapYear(this.year);
-  // }
-  
+    
   getMonth(monthNumber: any) {
     return new Month(new Date(this.year, monthNumber - 1), this.lang);
   }
@@ -49,7 +36,7 @@ export class Calendar {
   }
   
   getNextMonth() {
-    if(this.month.number === 12) {
+    if (this.month.number === 12) {
       return new Month(new Date(this.year + 1, 0), this.lang);
     }
     

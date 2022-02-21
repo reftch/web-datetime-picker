@@ -7,7 +7,6 @@ FROM $FROM:$TAG
 ENV PROXY=$PROXY
 
 WORKDIR /app
-USER root
 
 # Install packages
 RUN set -eux; \

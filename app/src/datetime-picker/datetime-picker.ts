@@ -7,21 +7,22 @@ export class DateTimePicker extends HTMLElement {
     return ['placeholder','start-date','end-date'];
   }
   
-  format = 'DD/MM/YYYY';
+  private format = 'DD/MM/YYYY';
+
   private shadow: ShadowRoot;
   private dateBtn: HTMLElement | null = null;
   private prevBtn: HTMLElement | null = null;
   private nextBtn: HTMLElement | null = null;
   
+  day: Day;
   calendar: Calendar;
-  day: Day | null = null;
   selectedDayElement: HTMLElement | null = null;
 
   constructor() {
     super();
 
     const lang = window.navigator.language;
-    const date = new Date(this.day ?? (this.getAttribute("date") || Date.now()));
+    const date = new Date((this.getAttribute("date") || Date.now()));
     this.day = new Day(date, lang);
     this.calendar = new Calendar(this.day.year, this.day.monthNumber, lang);
 
@@ -30,7 +31,7 @@ export class DateTimePicker extends HTMLElement {
   }
 
   connectedCallback() {
-    this.dateBtn = this.shadow.querySelector(".datetime-icon");
+    this.dateBtn = this.shadow.querySelector(".date-time-icon");
     if (this.dateBtn) {
       this.dateBtn.addEventListener('click', this.triggerPicker);
     }
@@ -76,7 +77,7 @@ export class DateTimePicker extends HTMLElement {
         break;
       }
 
-      case 'end_date': {
+      case 'end-date': {
         const el = this.shadow.querySelector('#endDate');
         if (el && newValue) {
           (el as HTMLInputElement).value = newValue;
@@ -134,7 +135,7 @@ export class DateTimePicker extends HTMLElement {
     const prevMonth = this.calendar.getPreviousMonth();
     const totalLastMonthFinalDays = firstDayOfTheMonth.dayNumber - 1;
     const totalDays = this.calendar.month.numberOfDays + totalLastMonthFinalDays;
-    const monthList = Array.from({length: totalDays});
+    const monthList = Array.from({ length: totalDays });
     
     for (let i = totalLastMonthFinalDays; i < totalDays; i++) {
       monthList[i] = this.calendar.month.getDay(i + 1 - totalLastMonthFinalDays)
@@ -201,6 +202,7 @@ export class DateTimePicker extends HTMLElement {
   get css() {
     return `
       :host {
+        color: var(--db-color);
       }
       .element {
         width: 100%;
@@ -209,7 +211,6 @@ export class DateTimePicker extends HTMLElement {
         margin: 0;
         grid-template-columns: fit-content(50%) fit-content(50%) 35px;
         grid-gap: 5px;
-        //border: 1px solid black;
         border-radius: 3px;
         margin-bottom: 5px;
         box-shadow: 0 0 8px rgba(0,0,0,0.2);
@@ -218,7 +219,7 @@ export class DateTimePicker extends HTMLElement {
         width: 185px;
         height: 26px;
       }
-      .datetime-icon {
+      .date-time-icon {
         position: relative;
         margin: 5px;
         background: url('/assets/datetime.png');
@@ -228,12 +229,14 @@ export class DateTimePicker extends HTMLElement {
         width: 30px;
         cursor: pointer; 
       }
+      .date-time-icon:hover {
+        color: var(--dp-hover);
+      }
       input[type="text"] {
         position: relative;
         top: 10px;
         width: 90%;
         height: 18px;
-        color: #888;
         padding-left: 5px;
         outline: none;
         border: none;
@@ -245,7 +248,7 @@ export class DateTimePicker extends HTMLElement {
         border-radius: 5px;
         width: 300px;
         height: 270px;
-        background-color: #fff;
+        background-color: var(--db-background);
         padding: 10px;
         box-shadow: 0 0 8px rgba(0,0,0,0.2);
         z-index: 99;
@@ -264,7 +267,7 @@ export class DateTimePicker extends HTMLElement {
         padding: 10px 0 10px 0;
       }
       .month-text {
-        color: #444;
+        color: var(--dp-color);
         text-align: center;
         font-size: 20px;
         font-weight: 600;
@@ -274,7 +277,7 @@ export class DateTimePicker extends HTMLElement {
         height: 0;
         position: relative;
         top: 20px;
-        border-bottom: 8px solid #444;
+        border-bottom: 8px solid var(--dp-color);
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
       }
@@ -291,7 +294,7 @@ export class DateTimePicker extends HTMLElement {
       }
       .left:hover, 
       .right:hover {
-        border-bottom-color: #0399f7;
+        border-bottom-color: var(--dp-hover);
       }
       .week-days {
         display: grid;
@@ -313,7 +316,7 @@ export class DateTimePicker extends HTMLElement {
       }
       .month-day {
         padding: 8px 5px;
-        background: #c7c9d3;
+        background: var(--dp-month-day);
         color: #fff;
         display: flex;
         justify-content: center;
@@ -323,14 +326,14 @@ export class DateTimePicker extends HTMLElement {
         border: none;
       }
       .month-day.current {
-        background: #444857;
+        background: var(--dp-color);
       }
       .month-day.selected {
-        background: #28a5a7;
-        color: #ffffff;
+        background: var(--dp-selected);
+        color: var(--dp-background);
       }
       .month-day:hover {
-        background: #34bd61;
+        background: var(--dp-hover);
       }
     `;
   }
@@ -345,7 +348,7 @@ export class DateTimePicker extends HTMLElement {
         <div>  
           <input id="endDate" type="text" class="date-toggle">
         </div>
-        <div class="datetime-icon"></div>
+        <div class="date-time-icon"></div>
       </div>
       <div class="select-area">
         <div class="month">

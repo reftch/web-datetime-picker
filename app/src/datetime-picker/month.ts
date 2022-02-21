@@ -21,15 +21,6 @@ export class Month {
     if (this.number === 2) {
       this.numberOfDays += isLeapYear(day.year) ? 1 : 0;
     }
-    
-    // this[Symbol.iterator] = function* () {
-    //   let number = 1;
-    //   yield this.getDay(number);
-    //   while(number < this.numberOfDays) {
-    //     ++number;
-    //     yield this.getDay(number);
-    //   }
-    // }
   }
   
   getDay(date: number | undefined) {
