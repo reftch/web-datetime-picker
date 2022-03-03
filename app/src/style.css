@@ -3,7 +3,7 @@
   position: absolute;
   top: 10%;
   left: calc(50% - 100px);
-  width: 200px;
+  width: 600px;
   align-items: center;
 }
 
@@ -13,4 +13,8 @@
   --dp-background: #fdfdfd;
   --dp-month-day: #c7c9d3;
   --dp-selected: #0399a7;
+  --dp-placeholder: #acacac;
+}
+:focus {
+  outline: none;
 }

@@ -22,13 +22,13 @@ export class Day extends Date {
     
     this.Date = date;
     this.date = date.getDate();
-    this.day = date.toLocaleString(lang, { weekday: 'long'});
+    this.day = date.toLocaleString(lang, { weekday: 'long' });
     this.dayNumber = date.getDay() + 1;
-    this.dayShort = date.toLocaleString(lang, { weekday: 'short'});
+    this.dayShort = date.toLocaleString(lang, { weekday: 'short' });
     this.year = date.getFullYear();
-    this.yearShort = date.toLocaleString(lang, { year: '2-digit'});
-    this.month = date.toLocaleString(lang, { month: 'long'});
-    this.monthShort = date.toLocaleString(lang, { month: 'short'});
+    this.yearShort = date.toLocaleString(lang, { year: '2-digit' });
+    this.month = date.toLocaleString(lang, { month: 'long' });
+    this.monthShort = date.toLocaleString(lang, { month: 'short' });
     this.monthNumber = date.getMonth() + 1;
     this.timestamp = date.getTime();
     this.week = getWeekNumber(date);
