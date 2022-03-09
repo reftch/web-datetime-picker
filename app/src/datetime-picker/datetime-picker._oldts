@@ -314,18 +314,17 @@ export class DateTimePicker extends HTMLElement {
         width: 185px;
         height: 26px;
       }
-      .date-time-icon {
+      .icon-calendar {
         position: relative;
         margin: 5px;
-        background: url('/assets/datetime.png');
-        background-size: 26px;
+        background: url('/assets/Smock_Calendar_18_N.svg');
+        background-size: 22px;
         background-repeat: no-repeat;
-        height: 26px; 
-        width: 26px;
         cursor: pointer; 
       }
-      .date-time-icon:hover {
-        color: var(--dp-hover);
+      .icon-calendar:hover {
+        opacity:.8;
+        filter: invert(39%) sepia(17%) saturate(4362%) hue-rotate(150deg) brightness(104%) contrast(98%);
       }
       input[type="text"] {
         position: relative;
@@ -467,7 +466,7 @@ export class DateTimePicker extends HTMLElement {
           <input id="startDate" type="text" class="date-toggle">
         </div>
         ${this.range ? this.endDate : this.nothing}
-        <div class="date-time-icon"></div>
+        <span class="icon-calendar"></span>
       </div>
       <div class="select-area" style="${this.selectAreaShift}">
         <div class="month">

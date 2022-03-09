@@ -19,13 +19,13 @@ export class Day extends Date {
   constructor(date: Date | null, lang = 'default') {
     super();
     date = date ?? new Date();
-    
+        
+    this.year = date.getFullYear();
     this.Date = date;
     this.date = date.getDate();
     this.day = date.toLocaleString(lang, { weekday: 'long' });
     this.dayNumber = date.getDay() + 1;
     this.dayShort = date.toLocaleString(lang, { weekday: 'short' });
-    this.year = date.getFullYear();
     this.yearShort = date.toLocaleString(lang, { year: '2-digit' });
     this.month = date.toLocaleString(lang, { month: 'long' });
     this.monthShort = date.toLocaleString(lang, { month: 'short' });
@@ -38,12 +38,27 @@ export class Day extends Date {
     return this.isEqualTo(new Date());
   }
   
+  getFullYear(): number {
+    return this.year;    
+  }
+
   isEqualTo(date: Date) {
     date = date instanceof Day ? date.Date : date;
-    
     return date.getDate() === this.date &&
       date.getMonth() === this.monthNumber - 1 &&
       date.getFullYear() === this.year;
+  }
+
+  isLessTo(date: Day) {
+    if (this.year !== date.getFullYear()) {
+      return this.year < date.getFullYear();
+    } 
+
+    if (this.monthNumber !== date.monthNumber) {
+      return this.monthNumber < date.monthNumber;
+    }
+
+    return this.date <= date.date;
   }
   
   format(formatStr: string) {
@@ -61,5 +76,9 @@ export class Day extends Date {
       .replace(/\bMM\b/, this.monthNumber.toString().padStart(2, '0'))
       .replace(/\bM\b/, String(this.monthNumber));
   }
-  
+
+  toString() {
+    return `${this.date}/${this.monthNumber}/${this.getFullYear()}`
+  }
+   
 }

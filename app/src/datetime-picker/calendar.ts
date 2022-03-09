@@ -23,11 +23,11 @@ export class Calendar {
     })
   }
     
-  getMonth(monthNumber: any) {
-    return new Month(new Date(this.year, monthNumber - 1), this.lang);
+  getMonth() {
+    return this.month;
   }
   
-  getPreviousMonth() {
+  get previousMonth() {
     if(this.month.number === 1) {
       return new Month(new Date(this.year - 1, 11), this.lang);
     }
@@ -35,7 +35,7 @@ export class Calendar {
     return new Month(new Date(this.year, this.month.number - 2), this.lang);
   }
   
-  getNextMonth() {
+  get nextMonth() {
     if (this.month.number === 12) {
       return new Month(new Date(this.year + 1, 0), this.lang);
     }
@@ -43,32 +43,32 @@ export class Calendar {
     return new Month(new Date(this.year, this.month.number + 2), this.lang);
   }
   
-  goToDate(monthNumber: number, year: number) {
+  toDate(monthNumber: number, year: number) {
     this.month = new Month(new Date(year, monthNumber - 1), this.lang);
     this.year = year;
   }
   
-  goToNextYear() {
+  toNextYear() {
     this.year += 1;
     this.month = new Month(new Date(this.year, 0), this.lang);
   }
   
-  goToPreviousYear() {
+  toPreviousYear() {
     this.year -= 1;
     this.month = new Month(new Date(this.year, 11), this.lang);
   }
   
-  goToNextMonth() {
+  toNextMonth() {
     if(this.month.number === 12) {
-      return this.goToNextYear();
+      return this.toNextYear();
     }
     
     this.month = new Month(new Date(this.year, (this.month.number + 1) - 1), this.lang);
   }
   
-  goToPreviousMonth() {
+  toPreviousMonth() {
     if(this.month.number === 1) {
-      return this.goToPreviousYear();
+      return this.toPreviousYear();
     }
     
     this.month = new Month(new Date(this.year, (this.month.number - 1) - 1), this.lang);
