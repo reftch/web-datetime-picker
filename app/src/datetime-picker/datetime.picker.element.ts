@@ -191,7 +191,7 @@ export class DateTimePickerElement extends HTMLElement {
         const el = this.shadow.querySelector("#reset-btn");
         if (el) {
           (el as ButtonElement).title = `${this.btnResetTitle}`;
-          (el as ButtonElement).secondary = true;
+          //(el as ButtonElement).secondary = true;
         }
         break;
       }

@@ -27,10 +27,17 @@ export class BaseElement extends HTMLElement {
     }
   }
 
-  protected setClasses(selector: string, classes: Array<string>) {
+  protected addClasses(selector: string, classes: Array<string>) {
     const el = this.shadow.querySelector(selector);
     if (el && classes) {
       classes.forEach(c => el.classList.add(c));
+    }
+  }
+
+  protected removeClasses(selector: string, classes: Array<string>) {
+    const el = this.shadow.querySelector(selector);
+    if (el && classes) {
+      classes.forEach(c => el.classList.remove(c));
     }
   }
 
