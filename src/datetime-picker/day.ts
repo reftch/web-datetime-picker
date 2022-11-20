@@ -1,5 +1,5 @@
 
-import { getWeekNumber } from "./utils";
+import { getWeekNumber } from "../utils";
 
 export class Day extends Date {
 
@@ -14,12 +14,12 @@ export class Day extends Date {
   monthShort: string;
   monthNumber: number;
   timestamp: number;
-  week: any;
+  week: number;
 
   constructor(date: Date | null, lang = 'default') {
     super();
     date = date ?? new Date();
-        
+
     this.year = date.getFullYear();
     this.Date = date;
     this.date = date.getDate();
@@ -33,13 +33,13 @@ export class Day extends Date {
     this.timestamp = date.getTime();
     this.week = getWeekNumber(date);
   }
-  
+
   get isToday() {
     return this.isEqualTo(new Date());
   }
-  
+
   getFullYear(): number {
-    return this.year;    
+    return this.year;
   }
 
   isEqualTo(date: Date) {
@@ -52,7 +52,7 @@ export class Day extends Date {
   isLessTo(date: Day) {
     if (this.year !== date.getFullYear()) {
       return this.year < date.getFullYear();
-    } 
+    }
 
     if (this.monthNumber !== date.monthNumber) {
       return this.monthNumber < date.monthNumber;
@@ -60,13 +60,13 @@ export class Day extends Date {
 
     return this.date <= date.date;
   }
-  
+
   format(formatStr: string) {
     return formatStr
       .replace(/\bYYYY\b/, String(this.year))
       .replace(/\bYYY\b/, this.yearShort)
       .replace(/\bWW\b/, this.week.toString().padStart(2, '0'))
-      .replace(/\bW\b/, this.week)
+      .replace(/\bW\b/, String(this.week))
       .replace(/\bDDDD\b/, this.day)
       .replace(/\bDDD\b/, this.dayShort)
       .replace(/\bDD\b/, this.date.toString().padStart(2, '0'))
@@ -80,5 +80,5 @@ export class Day extends Date {
   toString() {
     return `${this.date}/${this.monthNumber}/${this.getFullYear()}`
   }
-   
+
 }

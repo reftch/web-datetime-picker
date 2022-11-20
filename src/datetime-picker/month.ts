@@ -1,5 +1,5 @@
 import { Day } from "./day";
-import { isLeapYear } from "./utils";
+import { isLeapYear } from "../utils";
 
 export class Month {
   lang: string;
