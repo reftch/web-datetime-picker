@@ -19,7 +19,6 @@ export class DateTimePickerElement extends HTMLElement {
       'disabled',
       'required',
       'only-date'
-      // 'up'
     ];
   }
 
