@@ -71,18 +71,20 @@ export class ButtonElement extends HTMLElement {
     }
   }
 
-  submit = () => {
+  submit = (e: Event) => {
+    e.stopPropagation();
     if (this.disabled) {
       return;
     }
     this.dispatchEvent(new CustomEvent("action", {
-      detail: { 
+      detail: {
         id: this.id,
-        event: 'click' 
+        event: 'click'
       }
     }));
+    return false;
   }
-  
+
 }
 
 customElements.define('button-element', ButtonElement);

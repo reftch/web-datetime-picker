@@ -2,19 +2,35 @@
 #app {
   position: absolute;
   top: 10%;
-  left: calc(50% - 100px);
-  width: 200px;
+  left: calc(50% - 400px);
+  width: 800px;
   align-items: center;
+  font-family: "Trirong", serif;
 }
 
 :root {
+  --primary: #063360;
+  --primary-background: #acacac;
+
   --dp-hover: #0399f7;
   --dp-color: #063360;
   --dp-background: #fdfdfd;
-  --dp-month-day: #c7c9d3;
+  --dp-month-day: #23273c;
   --dp-selected: #0399a7;
   --dp-placeholder: #acacac;
+  --dp-datetime: #8c8c8c;
 }
 :focus {
   outline: none;
+}
+
+.table-grid {
+  display: grid;
+}
+
+table {
+  border: 1px solid #444;
+}
+td {
+  border: 1px solid #444;
 }

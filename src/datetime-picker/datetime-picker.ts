@@ -18,7 +18,8 @@ export class DateTimePickerElement extends HTMLElement {
       'btn-done',
       'disabled',
       'required',
-      'up'
+      'only-date'
+      // 'up'
     ];
   }
 
@@ -60,6 +61,7 @@ export class DateTimePickerElement extends HTMLElement {
   private selColor = '';
 
   private range = false;
+  private isOnlyDate = false;
 
   private tzOffset = 0;
 
@@ -70,6 +72,7 @@ export class DateTimePickerElement extends HTMLElement {
     this.startTimeTitle = this.getAttribute("start-time-title") ?? '';
     this.endTimeTitle = this.getAttribute("end-time-title") ?? '';
     this.range = this.getAttribute("range") === 'true';
+    this.isOnlyDate = this.getAttribute("only-date") === 'true' || this.getAttribute("only-date") === '';
 
     this.todayDay = new Day(new Date(Date.now()), this.lang);
 
@@ -127,11 +130,6 @@ export class DateTimePickerElement extends HTMLElement {
       this.doneBtn.addEventListener('click', this.done);
     }
 
-    const el = this.shadow.querySelector('.element');
-    if (el) {
-      setTimeout(() => this.resizeObserver.observe(el), 10);
-    }
-
     this.addEventListener('keydown', this.keydownHandler);
     this.addEventListener('blur', this.blurHandler);
   }
@@ -179,7 +177,7 @@ export class DateTimePickerElement extends HTMLElement {
           if (el && newValue) {
             (el as HTMLInputElement).value = newValue;
           }
-  
+
           const date = new Date(newValue);
 
           this.startDay = new Day(date, this.lang);
@@ -187,8 +185,8 @@ export class DateTimePickerElement extends HTMLElement {
           this.calendar = new Calendar(this.startDay.year, this.startDay.monthNumber, this.lang);
           this.closeMonthDays();
           this.renderCalendarDays();
-          
-          const tzOffset = date.getTimezoneOffset() / 60; 
+
+          const tzOffset = date.getTimezoneOffset() / 60;
           this.tzOffset = tzOffset;
           this.startHours = date.getHours() + tzOffset;
           this.startMinutes = date.getMinutes();
@@ -196,7 +194,6 @@ export class DateTimePickerElement extends HTMLElement {
           this.setDateValue();
           this.updateTimeValues();
         }
-    
         break;
       }
 
@@ -266,25 +263,23 @@ export class DateTimePickerElement extends HTMLElement {
         }
         break;
       }
-      case 'up': {
-        if (newValue === 'true' || newValue === '') {
-          const el = this.shadow.querySelector('.select-area');
-          el?.classList.add('select-area-up');
-        }
+      case 'only-date': {
+        this.isOnlyDate = newValue === 'true' || newValue === '';
+        console.log(newValue);
         break;
       }
+
+
+      // case 'up': {
+      //   if (newValue === 'true' || newValue === '') {
+      //     const el = this.shadow.querySelector('.select-area');
+      //     el?.classList.add('select-area-up');
+      //   }
+      //   break;
+      // }
     }
   }
 
-  _resizeCallback = () => {
-    const el = this.shadow.querySelector('#startDate');
-    if (el) {
-      // eslint-disable-next-line
-      (el as any).style = `width: ${(this.width) - 15}px;`;
-    }
-  }
-
-  resizeObserver = new ResizeObserver(this._resizeCallback);
 
   get weekDays() {
     return this.calendar.weekDays
@@ -294,7 +289,7 @@ export class DateTimePickerElement extends HTMLElement {
   keydownHandler = (e: KeyboardEvent) => {
     e.stopPropagation();
     if (this.disabled) {
-      return;
+      return false;
     }
     const el = this.shadow.activeElement;
     if (e.code === 'Escape' || e.code === 'Enter') {
@@ -398,6 +393,7 @@ export class DateTimePickerElement extends HTMLElement {
     }
 
     this.updateTimeValues();
+    return false;
   }
 
   blurHandler = () => {
@@ -519,13 +515,12 @@ export class DateTimePickerElement extends HTMLElement {
 
   setDateValue() {
     let startDate = null;
-    // console.log(this.tzOffset);
     if (this.startDay) {
       startDate = new Date(this.startDay.format(this.isoFormat));
       startDate.setHours(this.startHours - this.tzOffset);
       startDate.setMinutes(this.startMinutes);
     }
-    
+
     let endDate = null;
     if (this.endDay) {
       endDate = new Date(this.endDay.format(this.isoFormat));
@@ -568,7 +563,7 @@ export class DateTimePickerElement extends HTMLElement {
         }
       }))
     }
-    
+
   }
 
   setTimeDisabled(value: boolean) {
@@ -615,12 +610,12 @@ export class DateTimePickerElement extends HTMLElement {
     }
   }
 
-  get monthDaysGrid() {
+  get monthDaysGrid(): Array<Day> {
     const firstDayOfTheMonth = this.calendar.month.getDay(1);
     const prevMonth = this.calendar.previousMonth;
     const totalLastMonthFinalDays = firstDayOfTheMonth.dayNumber - 1;
     const totalDays = this.calendar.month.numberOfDays + totalLastMonthFinalDays;
-    const monthList = Array.from({ length: totalDays });
+    const monthList: Array<Day> = [];
 
     for (let i = totalLastMonthFinalDays; i < totalDays; i++) {
       monthList[i] = this.calendar.month.getDay(i + 1 - totalLastMonthFinalDays);
@@ -653,21 +648,21 @@ export class DateTimePickerElement extends HTMLElement {
       const el = this.shadow.querySelector('.select-area');
       if (el) {
         const height = Math.ceil(this.monthDaysGrid.length / 7) * 40;
-        // eslint-disable-next-line
-        (el as any).style = `height: ${height + 252}px; left: -${(320 - this.width) / 2}px;`
+
+        // (el as HTMLElement).style = `height: ${height + 252}px; left: 0px;`
+        (el as HTMLElement).style.height = `${height + 150}px`;
       }
 
-      // eslint-disable-next-line
-      this.monthDaysGrid.forEach((day: any) => {
+      this.monthDaysGrid.forEach((day: Day) => {
         const el = document.createElement('button');
         el.className = 'month-day';
-        el.textContent = day.date;
+        el.textContent = String(day.date);
         el.addEventListener('click', () => this.selectDay(el, day));
         el.setAttribute('aria-label', day.format(this.format));
 
         if (day.monthNumber === this.calendar.month.number) {
-          if (!this.range) {
-            if (day.isLessTo(this.startDay)) {
+          if (this.range) {
+            if (this.startDay && day?.isLessTo(this.startDay)) {
               if (this.todayDay?.isLessTo(day)) {
                 el.classList.add('available');
               }
@@ -678,6 +673,7 @@ export class DateTimePickerElement extends HTMLElement {
           } else {
             el.classList.add('current');
           }
+          el.classList.add('current');
         }
 
         if (!this.range && this.isSelectedDate(day)) {
@@ -752,9 +748,9 @@ export class DateTimePickerElement extends HTMLElement {
   get buttonArea() {
     return /*html*/`
       <div class="button-area">
-        <wcl-button-primary id="reset-btn" title="${this.btnResetTitle}" secondary></wcl-button-primary>
+        <button-element id="reset-btn" title="${this.btnResetTitle}" secondary></wcl-button-element>
         <div class="done-area">
-          <wcl-button-primary id="done-btn" title="${this.btnDoneTitle}"></wcl-button-primary>
+          <button-element id="done-btn" title="${this.btnDoneTitle}"></button-element>
         </div>
       </div>
     `;
@@ -840,7 +836,7 @@ export class DateTimePickerElement extends HTMLElement {
         </div>
         <div class="week-days">${this.weekDays}</div>
         <div class="month-days"></div>
-        ${this.timeArea}
+        ${this.isOnlyDate ? this.nothing : this.timeArea}
         ${this.buttonArea}
       </div>
     `;
@@ -853,9 +849,9 @@ export class DateTimePickerElement extends HTMLElement {
         <div>
           <input id="startDate" type="text" readonly class="date-toggle">
         </div>
-        <span class="date-time-icon"></span>
+        <i id="icon-datetime" class="date-time-icon"></i>
+        </div>
         ${this.selectArea}
-      </div>
     `;
   }
 

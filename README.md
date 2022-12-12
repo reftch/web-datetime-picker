@@ -1,4 +1,6 @@
 # web-datetime-picker
 Date time picker
 
-1.1
+1.2
+
+

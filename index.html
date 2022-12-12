@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Datetime Picker</title>
-    <link rel="stylesheet" href="/src/style.css">
-    <script type="module" src="/src/main.ts"></script>
-  </head>
-  <body>
-    <div id="app">
-      <datetime-picker
-        id="1" 
-        placeholder="__/__/____ " 
-        range="false"
-        width="200"
-      ></datetime-picker>
 
-      <wcl-button title="Button"></wcl-button>
-      <wcl-button title="Secondary" secondary="true"></wcl-button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datetime Picker</title>
+  <link id="favicon" rel="icon" href="/assets/schedule.png" />
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+  <script type="module" src="/src/main.ts"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="table-grid">
+
     </div>
-  </body>
+    <datetime-picker
+      id="1"
+      placeholder="__/__/____ "
+      range="false"
+      width="200"
+      only-date
+    ></datetime-picker>
+  </div>
+</body>
+
 </html>
